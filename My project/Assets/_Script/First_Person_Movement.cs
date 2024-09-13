@@ -1,0 +1,63 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class First_Person_Movement : MonoBehaviour
+{
+
+    [SerializeField]
+    private float speed ;
+
+    [SerializeField]
+    private float mouseSensitivity ;
+
+    private Rigidbody rb;
+    private Vector3 movement;
+
+    private float xRotation;
+
+    private void Start()
+    {
+        rb = GetComponent<Rigidbody>();
+        rb.freezeRotation = true; // Prevents the character from tipping over
+        Cursor.lockState = CursorLockMode.Locked; // Hides and locks the cursor
+    }
+
+    private void Update()
+    {
+        RotatePlayer();
+    }
+
+    private void FixedUpdate()
+    {
+        MovePlayer();
+    }
+
+    private void MovePlayer()
+    {
+        float moveX = Input.GetAxis("Horizontal"); // A/D or Left/Right arrow keys
+        float moveZ = Input.GetAxis("Vertical");   // W/S or Up/Down arrow keys
+
+        // Calculate movement direction
+        movement = (transform.right * moveX + transform.forward * moveZ).normalized;
+
+        // Apply movement
+        rb.MovePosition(rb.position + movement * speed * Time.fixedDeltaTime);
+    }
+
+    private void RotatePlayer()
+    {
+        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;
+        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity;
+
+        // Rotate character around the Y axis
+        transform.Rotate(Vector3.up * mouseX);
+
+        // Rotate the camera vertically
+        xRotation -= mouseY;
+        xRotation = Mathf.Clamp(xRotation, -90f, 90f); // Clamps the rotation to prevent over-rotation
+
+        Camera.main.transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
+    }
+}
+
