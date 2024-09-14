@@ -80,9 +80,28 @@ public class aslot_rifel : MonoBehaviour
 
     void ApplyRecoil()
     {
-        // Apply recoil force to the rifle
-        rifle.localPosition -= rifle.forward * recoil_Force * Time.deltaTime;
-        rifle.localRotation *= Quaternion.EulerRotation(-recoil_Force * Time.deltaTime, 0, 0);
+        // Apply recoil force to the rifle on the local Z-axis (moving backward)
+        Vector3 recoilPosition = rifle.localPosition;
+        recoilPosition -= rifle.forward * recoil_Force * Time.deltaTime;
+
+        // Clamp the Z position so it doesn't go beyond 0.3
+        recoilPosition.z = Mathf.Clamp(recoilPosition.z, -0.3f, originalPosition.z);
+
+        // Apply the clamped position back to the rifle
+        rifle.localPosition = recoilPosition;
+
+        // Get the current rotation in Euler angles
+        Vector3 currentRotation = rifle.localRotation.eulerAngles;
+
+        // Convert the current X rotation to a value between -180 and 180 degrees
+        float xRotation = (currentRotation.x > 200) ? currentRotation.x - 360 : currentRotation.x;
+
+        // Apply recoil to the X-axis and clamp it to a minimum of -18 degrees
+        xRotation = Mathf.Clamp(xRotation - recoil_Force * Time.deltaTime, -180f, currentRotation.x);
+
+        // Create a new rotation with the clamped X value and apply it to the rifle
+        rifle.localRotation = Quaternion.Euler(xRotation, currentRotation.y, currentRotation.z);
     }
 }
+
 

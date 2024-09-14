@@ -6,6 +6,9 @@ public class First_Person_Movement : MonoBehaviour
 {
 
     [SerializeField]
+    private Animator anim;
+
+    [SerializeField]
     private float speed ;
 
     [SerializeField]
@@ -43,6 +46,29 @@ public class First_Person_Movement : MonoBehaviour
 
         // Apply movement
         rb.MovePosition(rb.position + movement * speed * Time.fixedDeltaTime);
+
+        if (moveX > 0)
+        {
+            anim.SetFloat("frunt_back", 1f);
+        }
+        if (moveX < 0)
+        {
+            anim.SetFloat("frunt_back", -1f);
+        }
+        if (moveZ > 0)
+        {
+            anim.SetFloat("left_Right", 1f);
+        } 
+        if (moveZ < 0)
+        {
+            anim.SetFloat("left_Right", -1f);
+        }
+        if (moveX == 0 && moveZ == 0)
+        {
+            anim.SetFloat("frunt_back", 0);
+            anim.SetFloat("left_Right", 0);
+        }
+
     }
 
     private void RotatePlayer()
