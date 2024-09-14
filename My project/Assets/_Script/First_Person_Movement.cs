@@ -81,7 +81,7 @@ public class First_Person_Movement : MonoBehaviour
 
         // Rotate the camera vertically
         xRotation -= mouseY;
-        xRotation = Mathf.Clamp(xRotation, -90f, 90f); // Clamps the rotation to prevent over-rotation
+        xRotation = Mathf.Clamp(xRotation, -45f, 30f); // Clamps the rotation to prevent over-rotation
 
         Camera.main.transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
     }
